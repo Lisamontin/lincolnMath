@@ -1,0 +1,47 @@
+body {
+  text-align: center;
+  background-color: rgb(82,92,102);
+}
+
+#gameArea {
+  text-align: center;
+  font-size: 2em;
+}
+
+#problem {
+  font-size: 2em;
+  margin-left: 40%;
+  margin-right:40%;
+  border-radius: 25px;
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+#timer {
+  position: fixed;
+  top: -100px;
+  margin: 5% auto;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 30em;
+  color: rgb(96, 108, 122);
+
+  z-index: -1;
+  user-select: none;
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  -o-user-select: none;
+}
+
+#highscore {
+  position: fixed;
+  left: 20px;
+  bottom: 20px;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
