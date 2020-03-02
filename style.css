@@ -34,10 +34,11 @@ body {
   -o-user-select: none;
 }
 
-#highscore {
+.highScore {
   position: fixed;
   left: 20px;
   bottom: 20px;
+  text-align: left;
 }
 
 .button {

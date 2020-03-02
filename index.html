@@ -9,13 +9,20 @@
 <body>
   <div id="timer">60</div>
   <h1>Lincolns Matte</h1>
-  <button id="start" class="button" onclick="startGame()">Börja</button><br>
+  <button id="start" class="button" onclick="startGame()">Börja</button>
+  
   <br>
+  <br>
+
   <div id="gameArea">
     <div id="problem"></div>
     <input type="number" name="solution" id="solution" class="input">
     <div id="score">Poäng: 0</div>
-    <div id="highscore"></div>
+    
+    <div class="highScore">
+      <div id="todaysHighScore" ></div>
+      <div id="allTimeHighScore" ></div>
+    </div>
   </div>
 
   <script src="app.js"></script>

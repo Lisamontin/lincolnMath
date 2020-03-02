@@ -5,7 +5,8 @@ const problemElement = document.getElementById("problem");
 const solutionElement = document.getElementById("solution");
 const scoreElement = document.getElementById("score");
 const timerElement = document.getElementById("timer");
-const highscoreElement = document.getElementById("highscore");
+const todaysHighScoreElement = document.getElementById("todaysHighScore");
+const allTimeHighScoreElement = document.getElementById("allTimeHighScore");
 
 // set up game timer that counts down until game is over
 let timer = new Timer(timerElement);
@@ -13,7 +14,8 @@ let timer = new Timer(timerElement);
 // stats used by the game
 let gameStats = {
   score: 0,
-  highscore: loadHighscore(), // tries to load highscore from local storage
+  highScore: loadScore('today'), // tries to load highScore from local storage
+  allTimeHighScore: loadScore('allTime'),
   currentSolution: 0
 };
 
@@ -28,8 +30,9 @@ problemElement.style.disply = 'none';
 solutionElement.style.display = 'none';
 scoreElement.style.display = 'none';
 
-// display highscore
-highscoreElement.innerText = `Bästa: ${gameStats.highscore}`
+// display highScore
+todaysHighScoreElement.innerText = `Bästa idag: ${gameStats.highScore}`
+allTimeHighScoreElement.innerText = `Personbästa: ${loadScore('allTime')}`
 
 // add eventlisteners
 solutionElement.addEventListener('keyup', (event) => {
@@ -41,7 +44,6 @@ solutionElement.addEventListener('keyup', (event) => {
     solutionElement.focus();
   }
 });
-
 
 // Function delcarations
 function startGame() {
@@ -69,7 +71,7 @@ function endGame() {
   solutionElement.style.display = 'none';
   problemElement.style.display = 'none';
 
-  updateHighscore();
+  updateHighScore();
 }
 
 function Timer(element) {
@@ -141,18 +143,6 @@ function viewScore() {
   scoreElement.innerHTML = `Poäng: ${gameStats.score}`;
 }
 
-function updateHighscore() {
-  // is called at end of game to update highscore if the rounds score is higher
-  if (gameStats.score > gameStats.highscore) {
-    gameStats.highscore = gameStats.score;
-    if(typeof(Storage)) {
-      localStorage.setItem('highscore', JSON.stringify(gameStats.highscore));
-    }
-    // display the highscore
-    highscoreElement.innerText = `Bästa: ${gameStats.highscore}`;
-  }
-}
-
 function randomNumberFromBounds(arr) {
   // takes an array and returns a random number in the range of the first two items.
   return Math.floor( Math.random() * (arr[1] - arr[0] + 1)) + arr[0];
@@ -163,9 +153,40 @@ function solutionIsCorrect(solution, answer) {
   return solution === answer ? true: false;
 }
 
-function loadHighscore() {
-  // tries to load highscore from localstorage and return the value, otherwise return 0;
+function updateHighScore() {
+  // destructure gameStats for better readability
+  let {score, highScore, allTimeHighScore} = gameStats;
+
+  if (score > highScore) {
+    gameStats.highScore = score;
+    if (typeof(Storage)) {
+      // if local storage exist => store high score locally and check all time high score too
+      let time = new Date();
+      localStorage.setItem(time.toDateString(), score);
+      
+      if (score > allTimeHighScore) {
+        gameStats.allTimeHighScore = score;
+        localStorage.setItem('allTimeHighScore', score);
+      }
+    }
+    
+    // update high score view
+    todaysHighScoreElement.innerText = `Bästa idag: ${gameStats.highScore}`;
+    allTimeHighScoreElement.innerText = `Personbästa: ${gameStats.allTimeHighScore}`;
+  }
+
+}
+
+function loadScore(date) {
+  // tries to load high score from local storage and return the value, otherwise return 0;
   if (typeof(Storage)) {
-    return JSON.parse(localStorage.getItem('highscore')) || 0;
+    let time = new Date();
+    if (date === 'today') {
+      // check for todays highscore
+      return JSON.parse(localStorage.getItem(time.toDateString())) || 0;
+    } else if (date === 'allTime') {
+      // check for all time highscore
+      return JSON.parse(localStorage.getItem('allTimeHighScore')) || 0;
+    }
   }
 }
