@@ -19,8 +19,8 @@ let gameStats = {
 
 // user settings
 let settings = {
-  timeToSolve: 60,
-  bounds: [1,10]
+  timeToSolve: 10,
+  bounds: [1,6]
 };
 
 // remove unwanted elements from view
