@@ -13,13 +13,13 @@ let timer = new Timer(timerElement);
 // stats used by the game
 let gameStats = {
   score: 0,
-  highscore: 0,
+  highscore: loadHighscore(), // tries to load highscore from local storage
   currentSolution: 0
 };
 
 // user settings
 let settings = {
-  timeToSolve: 10,
+  timeToSolve: 60,
   bounds: [1,6]
 };
 
@@ -28,7 +28,10 @@ problemElement.style.disply = 'none';
 solutionElement.style.display = 'none';
 scoreElement.style.display = 'none';
 
+// display highscore
+highscoreElement.innerText = `Bästa: ${gameStats.highscore}`
 
+// add eventlisteners
 solutionElement.addEventListener('keyup', (event) => {
   // eventlistener that submits solution when you press enter
   if (event.keyCode === 13) {
@@ -40,6 +43,7 @@ solutionElement.addEventListener('keyup', (event) => {
 });
 
 
+// Function delcarations
 function startGame() {
   // change the view and focus()
   startElement.style.display = 'none';
@@ -67,7 +71,6 @@ function endGame() {
 
   updateHighscore();
 }
-
 
 function Timer(element) {
   this.seconds;
@@ -142,9 +145,12 @@ function updateHighscore() {
   // is called at end of game to update highscore if the rounds score is higher
   if (gameStats.score > gameStats.highscore) {
     gameStats.highscore = gameStats.score;
+    if(typeof(Storage)) {
+      localStorage.setItem('highscore', JSON.stringify(gameStats.highscore));
+    }
+    // display the highscore
+    highscoreElement.innerText = `Bästa: ${gameStats.highscore}`;
   }
-  // display the highscore
-  highscoreElement.innerHTML = `Bästa: ${gameStats.highscore}`;
 }
 
 function randomNumberFromBounds(arr) {
@@ -155,4 +161,11 @@ function randomNumberFromBounds(arr) {
 function solutionIsCorrect(solution, answer) {
   // evaluate the solution and return true or false
   return solution === answer ? true: false;
+}
+
+function loadHighscore() {
+  // tries to load highscore from localstorage and return the value, otherwise return 0;
+  if (typeof(Storage)) {
+    return JSON.parse(localStorage.getItem('highscore')) || 0;
+  }
 }
